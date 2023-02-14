@@ -1,0 +1,9 @@
+version: '3'
+services:
+  envoy:
+    build:
+      context: ./proxy
+    image: proxy
+    container_name: Proxy
+    ports:
+      - 8080:8080
