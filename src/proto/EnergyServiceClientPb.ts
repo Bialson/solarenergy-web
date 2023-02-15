@@ -8,7 +8,7 @@
 // versions:
 // 	protoc-gen-grpc-web v1.4.2
 // 	protoc              v3.12.4
-// source: src/proto/energy.proto
+// source: energy.proto
 
 
 /* eslint-disable */
@@ -17,7 +17,7 @@
 
 import * as grpcWeb from 'grpc-web';
 
-import * as src_proto_energy_pb from '../../src/proto/energy_pb';
+import * as energy_pb from './energy_pb';
 
 
 export class SolarServiceClient {
@@ -31,7 +31,7 @@ export class SolarServiceClient {
                options?: null | { [index: string]: any; }) {
     if (!options) options = {};
     if (!credentials) credentials = {};
-    options['format'] = 'binary';
+    options['format'] = 'text';
 
     this.client_ = new grpcWeb.GrpcWebClientBase(options);
     this.hostname_ = hostname.replace(/\/+$/, '');
@@ -42,17 +42,17 @@ export class SolarServiceClient {
   methodDescriptorGetEnergyFromHomesByParams = new grpcWeb.MethodDescriptor(
     '/solarservice.SolarService/GetEnergyFromHomesByParams',
     grpcWeb.MethodType.SERVER_STREAMING,
-    src_proto_energy_pb.PowerConsumptionRequest,
-    src_proto_energy_pb.PowerFromHomes,
-    (request: src_proto_energy_pb.PowerConsumptionRequest) => {
+    energy_pb.PowerConsumptionRequest,
+    energy_pb.PowerFromHomes,
+    (request: energy_pb.PowerConsumptionRequest) => {
       return request.serializeBinary();
     },
-    src_proto_energy_pb.PowerFromHomes.deserializeBinary
+    energy_pb.PowerFromHomes.deserializeBinary
   );
 
   getEnergyFromHomesByParams(
-    request: src_proto_energy_pb.PowerConsumptionRequest,
-    metadata?: grpcWeb.Metadata): grpcWeb.ClientReadableStream<src_proto_energy_pb.PowerFromHomes> {
+    request: energy_pb.PowerConsumptionRequest,
+    metadata?: grpcWeb.Metadata): grpcWeb.ClientReadableStream<energy_pb.PowerFromHomes> {
     return this.client_.serverStreaming(
       this.hostname_ +
         '/solarservice.SolarService/GetEnergyFromHomesByParams',
@@ -64,23 +64,66 @@ export class SolarServiceClient {
   methodDescriptorGetEcoEnergyByParams = new grpcWeb.MethodDescriptor(
     '/solarservice.SolarService/GetEcoEnergyByParams',
     grpcWeb.MethodType.SERVER_STREAMING,
-    src_proto_energy_pb.EcoEnergyRequest,
-    src_proto_energy_pb.EcoEnergy,
-    (request: src_proto_energy_pb.EcoEnergyRequest) => {
+    energy_pb.EcoEnergyRequest,
+    energy_pb.EcoEnergy,
+    (request: energy_pb.EcoEnergyRequest) => {
       return request.serializeBinary();
     },
-    src_proto_energy_pb.EcoEnergy.deserializeBinary
+    energy_pb.EcoEnergy.deserializeBinary
   );
 
   getEcoEnergyByParams(
-    request: src_proto_energy_pb.EcoEnergyRequest,
-    metadata?: grpcWeb.Metadata): grpcWeb.ClientReadableStream<src_proto_energy_pb.EcoEnergy> {
+    request: energy_pb.EcoEnergyRequest,
+    metadata?: grpcWeb.Metadata): grpcWeb.ClientReadableStream<energy_pb.EcoEnergy> {
     return this.client_.serverStreaming(
       this.hostname_ +
         '/solarservice.SolarService/GetEcoEnergyByParams',
       request,
       metadata || {},
       this.methodDescriptorGetEcoEnergyByParams);
+  }
+
+  methodDescriptorSeyHello = new grpcWeb.MethodDescriptor(
+    '/solarservice.SolarService/SeyHello',
+    grpcWeb.MethodType.UNARY,
+    energy_pb.HelloReq,
+    energy_pb.HelloRes,
+    (request: energy_pb.HelloReq) => {
+      return request.serializeBinary();
+    },
+    energy_pb.HelloRes.deserializeBinary
+  );
+
+  seyHello(
+    request: energy_pb.HelloReq,
+    metadata: grpcWeb.Metadata | null): Promise<energy_pb.HelloRes>;
+
+  seyHello(
+    request: energy_pb.HelloReq,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.RpcError,
+               response: energy_pb.HelloRes) => void): grpcWeb.ClientReadableStream<energy_pb.HelloRes>;
+
+  seyHello(
+    request: energy_pb.HelloReq,
+    metadata: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.RpcError,
+               response: energy_pb.HelloRes) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/solarservice.SolarService/SeyHello',
+        request,
+        metadata || {},
+        this.methodDescriptorSeyHello,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/solarservice.SolarService/SeyHello',
+    request,
+    metadata || {},
+    this.methodDescriptorSeyHello);
   }
 
 }

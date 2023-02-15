@@ -1,26 +1,24 @@
-import React from 'react';
+// import React from 'react';
 import logo from './logo.svg';
 import './style/App.css';
 import * as grpcWeb from 'grpc-web';
-import { EcoEnergyRequest, EcoEnergy } from './proto/energy_pb';
+import { HelloReq, HelloRes } from './proto/energy_pb';
 import { SolarServiceClient } from './proto/EnergyServiceClientPb';
 
-//Make connetion to grpc server and get stream of messages
-const SolarService = new SolarServiceClient('http://localhost:9090');
-const request = new EcoEnergyRequest();
-request.setYear(2020);
+const echoService = new SolarServiceClient('http://localhost:8081');
 
-const stream = SolarService.getEcoEnergyByParams(request, {"Access-Control-Allow-Origin": "*"})
-stream.on('data', (response: EcoEnergy) => {
-	console.log(response.toObject());
+const request = new HelloReq();
+request.setName('World');
+
+const call = echoService.seyHello(request, {"Access-Control-Allow-Origin": "*"}, (err: grpcWeb.RpcError, response: HelloRes) => {
+    console.log(response);
+    if(err) {
+        console.log(err)
+    }
 });
-stream.on('status', (status: grpcWeb.Status) => {
-	console.log(status);
+call.on('status', (status: grpcWeb.Status) => {
+    console.log(status);
 });
-stream.on('end', () => {
-	console.log('end');
-});
-// stream.cancel();
 
 function App() {
 	return (
