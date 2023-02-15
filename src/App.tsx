@@ -2,23 +2,36 @@
 import logo from './logo.svg';
 import './style/App.css';
 import * as grpcWeb from 'grpc-web';
-import { HelloReq, HelloRes } from './proto/energy_pb';
+import { PowerConsumptionRequest, PowerFromHomes } from './proto/energy_pb';
 import { SolarServiceClient } from './proto/EnergyServiceClientPb';
 
-const echoService = new SolarServiceClient('http://localhost:8081');
+const echoService = new SolarServiceClient('app.szit.site');
 
-const request = new HelloReq();
-request.setName('World');
+const request = new PowerConsumptionRequest();
+request.setYear(2020);
 
-const call = echoService.seyHello(request, {"Access-Control-Allow-Origin": "*"}, (err: grpcWeb.RpcError, response: HelloRes) => {
-    console.log(response);
-    if(err) {
-        console.log(err)
-    }
+const stream = echoService.getEnergyFromHomesByParams(request, {"Access-Control-Allow-Origin": "*"});
+stream.on('data', (response: PowerFromHomes) => {
+	console.log(response);
 });
-call.on('status', (status: grpcWeb.Status) => {
-    console.log(status);
+stream.on('status', (status: grpcWeb.Status) => {
+	console.log(status);
 });
+stream.on('error', (err: grpcWeb.RpcError) => {
+	console.log(err);
+});
+stream.on('end', () => {
+	stream.cancel();
+});
+// const call = echoService.seyHello(request, {"Access-Control-Allow-Origin": "*"}, (err: grpcWeb.RpcError, response: PowerFromHomes) => {
+//     console.log(response);
+//     if(err) {
+//         console.log(err)
+//     }
+// });
+// call.on('status', (status: grpcWeb.Status) => {
+//     console.log(status);
+// });
 
 function App() {
 	return (
