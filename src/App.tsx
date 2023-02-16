@@ -22,17 +22,8 @@ stream.on('error', (err: grpcWeb.RpcError) => {
 stream.on('end', () => {
 	stream.cancel();
 });
-// const call = echoService.seyHello(request, {"Access-Control-Allow-Origin": "*"}, (err: grpcWeb.RpcError, response: PowerFromHomes) => {
-//     console.log(response);
-//     if(err) {
-//         console.log(err)
-//     }
-// });
-// call.on('status', (status: grpcWeb.Status) => {
-//     console.log(status);
-// });
 
-function App() {
+const App = () => {
 	return (
 		<div className="App">
 			<header className="App-header">
