@@ -2,15 +2,14 @@
 import logo from './logo.svg';
 import './style/App.css';
 import * as grpcWeb from 'grpc-web';
-import { PowerConsumptionRequest, PowerFromHomes } from './proto/energy_pb';
+import { PowerConsumptionRequest, PowerFromHomes} from './proto/energy_pb';
 import { SolarServiceClient } from './proto/EnergyServiceClientPb';
 
-const echoService = new SolarServiceClient('app.szit.site');
-
-const request = new PowerConsumptionRequest();
-request.setYear(2020);
-
-const stream = echoService.getEnergyFromHomesByParams(request, {"Access-Control-Allow-Origin": "*"});
+const HelloService = new SolarServiceClient('https://localhost:8080');
+const req = new PowerConsumptionRequest();
+req.setYear(2020);
+req.setResponseamount(204);
+const stream = HelloService.getEnergyFromHomesByParams(req, {});
 stream.on('data', (response: PowerFromHomes) => {
 	console.log(response);
 });
