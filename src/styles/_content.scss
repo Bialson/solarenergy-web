@@ -1,0 +1,11 @@
+@use '/src/styles/_variables.scss' as *;
+
+.content{
+    padding: 5rem;
+    width: calc(100% - 240px);
+    height: 100vh;
+    .responsive-container{
+        background-color: $widgets-color;
+        border-radius: 12px;
+    }
+}

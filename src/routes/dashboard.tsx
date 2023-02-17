@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Navbar } from '../components/Navbar';
 import { InfoContext } from '../context/InfoContext';
 import { Modal } from '../components/Modal';
+import { Content } from '../components/Content';
 
 const Dashboard = () => {
 	const [showInfo, setInfoShow] = useState<boolean>(false);
@@ -19,6 +20,7 @@ const Dashboard = () => {
 				)}
 				<Navbar>{showInfo && <Modal />}</Navbar>
 			</InfoContext.Provider>
+			<Content />
 		</div>
 	);
 };

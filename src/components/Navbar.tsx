@@ -26,9 +26,9 @@ export const Navbar = ({children} : any): JSX.Element => {
 						<FileEarmarkText size={25} />
 						<Link to="/docs">Dokumentacja</Link>
 					</li>
-					<li className="menu-item">
+					<li className="menu-item" onClick={() => setInfoShow(true)}>
 						<Terminal size={25} />
-						<a href="#about" onClick={() => setInfoShow(true)}>
+						<a href="#about">
 							O aplikacji
 						</a>
 					</li>
