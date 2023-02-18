@@ -3,15 +3,16 @@ import { Grid1x2, Terminal, FileEarmarkText } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
 import { useContext } from 'react';
 import { InfoContext } from '../context/InfoContext';
+import { LogoIcon } from './IconsPath';
 
 export const Navbar = ({children} : any): JSX.Element => {
-    const { showInfo, setInfoShow } = useContext(InfoContext);
+    const { setInfoShow } = useContext(InfoContext);
 	return (
 		<>
 			<nav className="navbar">
 				<div className="logo">
 					<img
-						src="/src/assets/icons/logo512.png"
+						src={LogoIcon}
 						alt="logo"
 						width={50}
 					/>
