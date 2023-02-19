@@ -1,9 +1,9 @@
 @use '/src/styles/_variables.scss' as *;
 
 .content{
-    padding: 5rem;
+    padding: 2rem;
     width: calc(100% - 240px);
-    height: 100vh;
+    height: 100svh;
     .responsive-container{
         background-color: $widgets-color;
         border-radius: 12px;
