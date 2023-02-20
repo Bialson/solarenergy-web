@@ -1,4 +1,3 @@
-import '../styles/_modal.scss';
 import { BoxArrowUpRight } from 'react-bootstrap-icons';
 import {
 	ReactIcon,
@@ -7,6 +6,7 @@ import {
 	GrpcIcon,
 	LogoIcon,
 } from './IconsPath';
+import '../styles/_modal.scss';
 
 export const Modal = () => {
 	return (

@@ -1,21 +1,17 @@
-import '../styles/_navbar.scss';
-import { Grid1x2, Terminal, FileEarmarkText } from 'react-bootstrap-icons';
-import { Link } from 'react-router-dom';
 import { useContext } from 'react';
+import { Link } from 'react-router-dom';
+import { Grid1x2, Terminal, FileEarmarkText } from 'react-bootstrap-icons';
 import { InfoContext } from '../context/InfoContext';
 import { LogoIcon } from './IconsPath';
+import '../styles/_navbar.scss';
 
-export const Navbar = ({children} : any): JSX.Element => {
-    const { setInfoShow } = useContext(InfoContext);
+export const Navbar = ({ children }: any): JSX.Element => {
+	const { setInfoShow } = useContext(InfoContext);
 	return (
 		<>
 			<nav className="navbar">
 				<div className="logo">
-					<img
-						src={LogoIcon}
-						alt="logo"
-						width={50}
-					/>
+					<img src={LogoIcon} alt="logo" width={50} />
 					<h3>solarenergy</h3>
 				</div>
 				<ul className="nav-menu">
@@ -29,13 +25,11 @@ export const Navbar = ({children} : any): JSX.Element => {
 					</li>
 					<li className="menu-item" onClick={() => setInfoShow(true)}>
 						<Terminal size={25} />
-						<a href="#about">
-							O aplikacji
-						</a>
+						<a href="#about">O aplikacji</a>
 					</li>
 				</ul>
 			</nav>
-            {children}
+			{children}
 		</>
 	);
 };
