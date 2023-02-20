@@ -9,7 +9,7 @@ import {
 	EcoEnergy,
 } from '../proto/energy_pb';
 import { SolarServiceClient } from '../proto/EnergyServiceClientPb';
-import { HighestConsumption } from './Widgets';
+import { SemiPieChart } from './Widgets';
 
 const SolarService = new SolarServiceClient('https://localhost:8080');
 
@@ -20,6 +20,9 @@ export const Content = () => {
 	const [EcoEnergyResponse, setEcoEnergyResponse] = useState<
 		Array<EcoEnergy.AsObject>
 	>([]);
+	const [TotalPower, setTotalPower] = useState<
+	Array<PowerFromHomes.AsObject>
+>([]);
 	const NewPowerRequest = (
 		year: number,
 		responseAmount: number,
@@ -44,7 +47,12 @@ export const Content = () => {
 		});
 		stream.on('end', () => {
 			stream.cancel();
-			setPowerFromHomesResponse(ResponseArray);
+			setTotalPower(
+				ResponseArray.filter((item) => item.region === 'POLSKA')
+			);
+			setPowerFromHomesResponse(
+				ResponseArray.filter((item) => item.region !== 'POLSKA')
+			);
 		});
 	};
 	const NewEcoRequest = (
@@ -83,6 +91,9 @@ export const Content = () => {
 	useEffect(() => {
 		console.log(EcoEnergyResponse, EcoEnergyResponse.length);
 	}, [EcoEnergyResponse]);
+	useEffect(() => {
+		console.log(TotalPower, TotalPower.length);
+	}, [TotalPower]);
 	return (
 		<div className="content">
 			<PowerChart
@@ -90,13 +101,30 @@ export const Content = () => {
 				height="60%"
 				data={PowerFromHomesResponse.filter(
 					(item) =>
-						item.unit === '[MWh]' && item.character === 'Ogółem' && item.region !== 'POLSKA'
+						item.unit === '[MWh]' && item.character === 'Ogółem'
 				)}
 			/>
 			<div className="content-wrapper">
 				<div className="content-wrapper-left"></div>
 				<div className="content-wrapper-right">
-					<HighestConsumption value={10} region="POLSKA" />
+					<SemiPieChart
+						value={1500}
+						region="OPOLSKIE"
+						title="Największe zużycie [MWh]"
+						object={PowerFromHomesResponse.reduce(
+							(prev, current) =>
+								prev.value > current.value && current.unit === "[MWh]" ? prev : current ,
+							PowerFromHomesResponse[0]
+						)}
+					/>
+					<SemiPieChart
+						value={1500}
+						region="POLSKA"
+						title="Całkowite zużycie [MWh]"
+						object={
+							TotalPower.filter(item => item.character === "Ogółem" && item.unit === "[MWh]")[0]
+						}
+					/>
 				</div>
 			</div>
 		</div>

@@ -4,11 +4,24 @@
     background-color: $widgets-color;
     border-radius: 12px;
     box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.75);
-    width: 100%;
-    height: 100%;
     padding: 1.5rem;
+    width: 30%;
+    height: 100%;
     .widget-title{
-        font-size: 1.4rem;
         font-weight: 600;
+        margin-bottom: 1.5rem;
+    }
+    .widget-content{
+        display: flex;
+        // width: 100%;
+        // height: 100%;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        .widget-region{
+            color: #60616C;
+            font-weight: 600;
+            align-self: center;
+        }
     }
 }
