@@ -1,28 +1,24 @@
-import { PowerChart } from './ComposedChart';
-import '../styles/_content.scss';
-import { useEffect, useState } from 'react';
 import * as grpcWeb from 'grpc-web';
-import {
-	PowerConsumptionRequest,
-	PowerFromHomes,
-	EcoEnergyRequest,
-	EcoEnergy,
-} from '../proto/energy_pb';
+import { useEffect, useState } from 'react';
+import { PowerConsumptionRequest, PowerFromHomes } from '../proto/energy_pb';
 import { SolarServiceClient } from '../proto/EnergyServiceClientPb';
-import { SemiPieChart } from './Widgets';
+import { PowerChart, SemiPieChart, RadialChart } from './Charts';
+import '../styles/_content.scss';
 
 const SolarService = new SolarServiceClient('https://localhost:8080');
 
+const Colors = ['#2BEBC8', '#FFC700'];
+
 export const Content = () => {
-	const [PowerFromHomesResponse, setPowerFromHomesResponse] = useState<
+	const [PowerInRegions, setPowerFromRegions] = useState<
 		Array<PowerFromHomes.AsObject>
 	>([]);
-	const [EcoEnergyResponse, setEcoEnergyResponse] = useState<
-		Array<EcoEnergy.AsObject>
+	const [PowerFromRegionsMWH, setPowerFromRegionsMWH] = useState<
+		Array<PowerFromHomes.AsObject>
 	>([]);
 	const [TotalPower, setTotalPower] = useState<
-	Array<PowerFromHomes.AsObject>
->([]);
+		Array<PowerFromHomes.AsObject>
+	>([]);
 	const NewPowerRequest = (
 		year: number,
 		responseAmount: number,
@@ -48,84 +44,64 @@ export const Content = () => {
 		stream.on('end', () => {
 			stream.cancel();
 			setTotalPower(
-				ResponseArray.filter((item) => item.region === 'POLSKA')
+				ResponseArray.filter((item) => item.region === 'POLSKA').map(
+					(item) => {
+						item.color =
+							item.character === 'Miasto' ? Colors[0] : Colors[1];
+						item.key = item.value;
+						item.title = item.character;
+						return item;
+					}
+				)
 			);
-			setPowerFromHomesResponse(
+			setPowerFromRegionsMWH(
+				ResponseArray.filter(
+					(item) => item.unit === '[MWh]' && item.region !== 'POLSKA'
+				)
+			);
+			setPowerFromRegions(
 				ResponseArray.filter((item) => item.region !== 'POLSKA')
 			);
-		});
-	};
-	const NewEcoRequest = (
-		year: number,
-		responseAmount: number,
-		type: string,
-		unit: string
-	) => {
-		const Request = new EcoEnergyRequest();
-		const ResponseArray: Array<EcoEnergy.AsObject> = [];
-		Request.setYear(year);
-		Request.setResponseamount(responseAmount);
-		Request.setUnit(unit);
-		Request.setType(type);
-		const stream = SolarService.getEcoEnergyByParams(Request, {});
-		stream.on('data', (response: EcoEnergy) => {
-			ResponseArray.push(response.toObject());
-		});
-		stream.on('status', (status: grpcWeb.Status) => {
-			console.log(status);
-		});
-		stream.on('error', (err: grpcWeb.RpcError) => {
-			console.log(err);
-		});
-		stream.on('end', () => {
-			stream.cancel();
-			setEcoEnergyResponse(ResponseArray);
 		});
 	};
 	useEffect(() => {
 		NewPowerRequest(2020, 204, '', '');
 	}, []);
-	useEffect(() => {
-		console.log(PowerFromHomesResponse, PowerFromHomesResponse.length);
-	}, [PowerFromHomesResponse]);
-	useEffect(() => {
-		console.log(EcoEnergyResponse, EcoEnergyResponse.length);
-	}, [EcoEnergyResponse]);
-	useEffect(() => {
-		console.log(TotalPower, TotalPower.length);
-	}, [TotalPower]);
 	return (
 		<div className="content">
 			<PowerChart
 				width="100%"
 				height="60%"
-				data={PowerFromHomesResponse.filter(
-					(item) =>
-						item.unit === '[MWh]' && item.character === 'Ogółem'
+				data={PowerFromRegionsMWH.filter(
+					(item) => item.character === 'Ogółem'
 				)}
 			/>
 			<div className="content-wrapper">
-				<div className="content-wrapper-left"></div>
-				<div className="content-wrapper-right">
-					<SemiPieChart
-						value={1500}
-						region="OPOLSKIE"
-						title="Największe zużycie [MWh]"
-						object={PowerFromHomesResponse.reduce(
-							(prev, current) =>
-								prev.value > current.value && current.unit === "[MWh]" ? prev : current ,
-							PowerFromHomesResponse[0]
-						)}
-					/>
-					<SemiPieChart
-						value={1500}
-						region="POLSKA"
-						title="Całkowite zużycie [MWh]"
-						object={
-							TotalPower.filter(item => item.character === "Ogółem" && item.unit === "[MWh]")[0]
-						}
-					/>
-				</div>
+				<SemiPieChart
+					title="Największe zużycie [MWh]"
+					object={PowerFromRegionsMWH.reduce(
+						(prev, current) =>
+							prev.value > current.value ? prev : current,
+						PowerFromRegionsMWH[0]
+					)}
+				/>
+				<SemiPieChart
+					title="Całkowite zużycie [MWh]"
+					object={
+						TotalPower.filter(
+							(item) =>
+								item.character === 'Ogółem' &&
+								item.unit === '[MWh]'
+						)[0]
+					}
+				/>
+				<RadialChart
+					data={TotalPower.filter(
+						(item) =>
+							item.character !== 'Ogółem' && item.unit === '[MWh]'
+					)}
+					title="Rozkład procentowy całkowitego zużycia"
+				/>
 			</div>
 		</div>
 	);
