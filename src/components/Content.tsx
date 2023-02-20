@@ -9,6 +9,7 @@ import {
 	EcoEnergy,
 } from '../proto/energy_pb';
 import { SolarServiceClient } from '../proto/EnergyServiceClientPb';
+import { HighestConsumption } from './Widgets';
 
 const SolarService = new SolarServiceClient('https://localhost:8080');
 
@@ -92,6 +93,12 @@ export const Content = () => {
 						item.unit === '[MWh]' && item.character === 'Ogółem' && item.region !== 'POLSKA'
 				)}
 			/>
+			<div className="content-wrapper">
+				<div className="content-wrapper-left"></div>
+				<div className="content-wrapper-right">
+					<HighestConsumption value={10} region="POLSKA" />
+				</div>
+			</div>
 		</div>
 	);
 };

@@ -4,8 +4,27 @@
     padding: 2rem;
     width: calc(100% - 240px);
     height: 100svh;
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
     .responsive-container{
         background-color: $widgets-color;
         border-radius: 12px;
+        box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.75);
+    }
+    .content-wrapper{
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .content-wrapper-left{
+        width: 30%;
+        height: 100%;
+    }
+    .content-wrapper-right{
+        width: 70%;
+        height: 100%;
     }
 }

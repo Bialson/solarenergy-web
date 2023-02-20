@@ -1,0 +1,14 @@
+@use '/src/styles/_variables.scss' as *;
+
+.widget{
+    background-color: $widgets-color;
+    border-radius: 12px;
+    box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.75);
+    width: 100%;
+    height: 100%;
+    padding: 1.5rem;
+    .widget-title{
+        font-size: 1.4rem;
+        font-weight: 600;
+    }
+}
