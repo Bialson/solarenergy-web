@@ -100,6 +100,9 @@ export class PowerFromHomes extends jspb.Message {
 
 export namespace PowerFromHomes {
   export type AsObject = {
+	title: string
+    key: number
+    color: any
     value: number,
     period: string,
     year: number,
