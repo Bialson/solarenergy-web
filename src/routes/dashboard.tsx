@@ -15,7 +15,7 @@ const Dashboard = () => {
 				{showInfo && (
 					<div
 						className="fade"
-						onClick={() => setInfoShow(current => !current)}
+						onClick={() => setInfoShow((current) => !current)}
 					></div>
 				)}
 				<Navbar>{showInfo && <Modal />}</Navbar>
