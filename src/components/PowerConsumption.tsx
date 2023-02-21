@@ -3,14 +3,14 @@ import { useEffect, useState } from 'react';
 import { PowerConsumptionRequest, PowerFromHomes } from '../proto/energy_pb';
 import { SolarServiceClient } from '../proto/EnergyServiceClientPb';
 import { PowerChart, SemiPieChart, RadialChart } from './Charts';
-import '../styles/_content.scss';
 import { Dropdown } from './Dropdown';
 import { YearContext } from '../context/YearContext';
 import { Loader } from './Loader';
+import '../styles/_content.scss';
 
 const SolarService = new SolarServiceClient('https://localhost:8080');
 
-const Colors = ['#2BEBC8', '#FFC700'];
+const RadialChartColors = ['#2BEBC8', '#FFC700'];
 
 export const Content = () => {
 	const [PowerInRegions, setPowerFromRegions] = useState<
@@ -53,7 +53,9 @@ export const Content = () => {
 				ResponseArray.filter((item) => item.region === 'POLSKA').map(
 					(item) => {
 						item.color =
-							item.character === 'Miasto' ? Colors[0] : Colors[1];
+							item.character === 'Miasto'
+								? RadialChartColors[0]
+								: RadialChartColors[1];
 						item.key = item.value;
 						item.title = item.character;
 						return item;
