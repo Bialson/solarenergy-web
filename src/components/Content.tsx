@@ -4,6 +4,9 @@ import { PowerConsumptionRequest, PowerFromHomes } from '../proto/energy_pb';
 import { SolarServiceClient } from '../proto/EnergyServiceClientPb';
 import { PowerChart, SemiPieChart, RadialChart } from './Charts';
 import '../styles/_content.scss';
+import { Dropdown } from './Dropdown';
+import { YearContext } from '../context/YearContext';
+import { Loader } from './Loader';
 
 const SolarService = new SolarServiceClient('https://localhost:8080');
 
@@ -19,6 +22,8 @@ export const Content = () => {
 	const [TotalPower, setTotalPower] = useState<
 		Array<PowerFromHomes.AsObject>
 	>([]);
+	const [year, setYear] = useState<string>('');
+	const [loading, setLoading] = useState<boolean>(false);
 	const NewPowerRequest = (
 		year: number,
 		responseAmount: number,
@@ -31,6 +36,7 @@ export const Content = () => {
 		Request.setResponseamount(responseAmount);
 		Request.setRegion(region);
 		Request.setCharacter(character);
+		setLoading(true);
 		const stream = SolarService.getEnergyFromHomesByParams(Request, {});
 		stream.on('data', (response: PowerFromHomes) => {
 			ResponseArray.push(response.toObject());
@@ -62,13 +68,18 @@ export const Content = () => {
 			setPowerFromRegions(
 				ResponseArray.filter((item) => item.region !== 'POLSKA')
 			);
+			setLoading(false);
 		});
 	};
 	useEffect(() => {
-		NewPowerRequest(2020, 204, '', '');
-	}, []);
+		NewPowerRequest(Number(year), 204, '', '');
+	}, [year]);
 	return (
 		<div className="content">
+			{loading && <Loader />}
+			<YearContext.Provider value={{ year, setYear }}>
+				<Dropdown />
+			</YearContext.Provider>
 			<PowerChart
 				width="100%"
 				height="60%"
